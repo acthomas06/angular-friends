@@ -6,7 +6,7 @@
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
 
-<script src='http://code.angularjs.org/1.1.5/angular.js' type='text/javascript'></script>
+<script src='angular.js' type='text/javascript'></script>
 <script src='app.js' type='text/javascript'></script>
 <script src='FriendController.js' type='text/javascript'></script>
 
@@ -16,7 +16,8 @@
 <title>Facebook Lesson 18</title>
 </head>
 
-<body>
+<body ng-app="FriendApp" ng-controller="FriendController">
+
 
 <h1>The <strong>facebook</strong> Friend Machine</h1>
 
@@ -26,47 +27,41 @@
 <form class="form-inline searchForm" role="form">
   <div class="form-group">
 
-  <input class="form-control" placeholder="Search Anything About Your Friends" >
+  <!--<input class="form-control" placeholder="Search Anything About Your Friends" ng-model='searchTerm'> -->
   <!-- The stuff below is For step 5....get rid of the one above if you wish-->
-<!--    
-    <input class="form-control" placeholder="Search Your Friends' Name" >
-    <input class="form-control" placeholder="Search Your Freinds' Location" > 
- -->
-    <select class="input-medium">
-        <option>Name</option>
-        <option># friends</option>
-        <option>City</option>
-        <option>State</option>
-        <option>Country</option>
+ 
+    <input class="form-control" placeholder="Search Your Friends' Name" ng-model='searchTerm.name'>
+    <input class="form-control" placeholder="Search Your Friends' Location" ng-model='searchTerm.current_location'> 
+
+    <select class="input-medium" ng-model='searchSort'>
+        <option value="name">Name</option>
+        <option value="friend_count"># friends</option>
+        <option value="current_location.city">City</option>
+        <option value="current_location.state">State</option>
+        <option value="current_location.country">Country</option>
     </select>
-    <select class="input-medium">
-        <option value="false">Descending</option>
-        <option value="true">Ascending</option>
+    <select class="input-medium" ng-model='sortAZ'>
+        <option value="false">Ascending</option>
+        <option value="true">Descending</option>
     </select>
   </div>
 </form>
 
   <ul>
-    <li class='friend'>
-       <img class="profile-pic" src='https://scontent-a.xx.fbcdn.net/hprofile-ash3/833_10200838803828124_1233160321_a.jpg'>
-      <h3>Cali Fornia</h3>
-      <div class="location">
-        Location: New Port Beach, California, United States
+    <li class='friend' ng-repeat='friend in friends | filter: searchTerm | orderBy: searchSort:sortAZ'>
+       <img class="profile-pic" ng-src='{{friend.pic_square}}'>
+      <h3>{{friend.name}}</h3>
+      <div class="location" ng-show="friend.current_location">
+        Location: {{friend.current_location.city}}, {{friend.current_location.state}}, {{friend.current_location.country}}
       </div>      
-      <div class="status">
-        Status: I hate the snow. I wish I was on the beach right now!!! <span class="hashtag">#ihateprovo</span>
+      <div class="status" ng-show="friend.status.message">
+        Status: {{friend.status.message}}
       </div>      
-      <div class="num-friends">
-        Friends: 1,367
+      <div class="num-friends" ng-show="friend.friend_count">
+        Friends: {{friend.friend_count}}
       </div>
     </li>
   </ul>
 </div>
-
-
-
-
-
-
 </body>
 </html>
